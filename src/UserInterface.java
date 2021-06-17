@@ -18,7 +18,10 @@ public class UserInterface
     private boolean showingAuthor;
 
     private JFrame frame;
-    private JTextField display;
+    private JTextField display1;
+    private JTextField display2;
+    private JTextField display3;
+    private JTextField display4;
     private JLabel status;
 
     /**
@@ -47,39 +50,45 @@ public class UserInterface
      */
     private void makeFrame()
     {
-        frame = new JFrame(calc.getTitle());
+        frame = new JFrame("NO TITLE ANYMORE");
         
         JPanel contentPane = (JPanel)frame.getContentPane();
         contentPane.setLayout(new BorderLayout(8, 8));
         contentPane.setBorder(new EmptyBorder( 10, 10, 10, 10));
 
-        display = new JTextField();
-        contentPane.add(display, BorderLayout.NORTH);
+        JPanel displayPanel = new JPanel(new GridLayout(4, 2));
+        display1 = new JTextField();
+        display2 = new JTextField();
+        display3 = new JTextField();
+        display4 = new JTextField();
+        displayPanel.add(display1, BorderLayout.NORTH);
+        status = new JLabel("Input Date as DD/MM/YYYY");
+        displayPanel.add(status, BorderLayout.EAST);
+        
+        displayPanel.add(display2, BorderLayout.EAST);
+        status = new JLabel("Input Date2 as DD/MM/YYYY");
+        displayPanel.add(status, BorderLayout.EAST);
+        
+        displayPanel.add(display3, BorderLayout.EAST);
+        status = new JLabel("Input Days to calculate");
+        displayPanel.add(status, BorderLayout.EAST);
+        
+        displayPanel.add(display4, BorderLayout.SOUTH);
+        status = new JLabel("Result");
+        displayPanel.add(status, BorderLayout.EAST);
+        
+        contentPane.add(displayPanel, BorderLayout.NORTH);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(4, 4));
-            addButton(buttonPanel, "7");
-            addButton(buttonPanel, "8");
-            addButton(buttonPanel, "9");
-            addButton(buttonPanel, "C");
-            
-            addButton(buttonPanel, "4");
-            addButton(buttonPanel, "5");
-            addButton(buttonPanel, "6");
-            addButton(buttonPanel, "?");
-            
-            addButton(buttonPanel, "1");
-            addButton(buttonPanel, "2");
-            addButton(buttonPanel, "3");
-            buttonPanel.add(new JLabel(" "));
-            
-            addButton(buttonPanel, "0");
-            addButton(buttonPanel, "+");
-            addButton(buttonPanel, "-");
-            addButton(buttonPanel, "=");
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 1));
+            addButton(buttonPanel, "Add Days");
+            addButton(buttonPanel, "Substract Days");
+            addButton(buttonPanel, "Get difference");
+            addButton(buttonPanel, "Get Weekday");
+
             
         contentPane.add(buttonPanel, BorderLayout.CENTER);
 
-        status = new JLabel(calc.getAuthor());
+        status = new JLabel("");
         contentPane.add(status, BorderLayout.SOUTH);
 
         frame.pack();
@@ -106,33 +115,30 @@ public class UserInterface
     {
         String command = event.getActionCommand();
 
-        if(command.equals("0") ||
-           command.equals("1") ||
-           command.equals("2") ||
-           command.equals("3") ||
-           command.equals("4") ||
-           command.equals("5") ||
-           command.equals("6") ||
-           command.equals("7") ||
-           command.equals("8") ||
-           command.equals("9")) {
-            int number = Integer.parseInt(command);
-            calc.numberPressed(number);
+        if(command.equals("Add Days")) {
+        	
+        	calc.addDays(display1.getText(), display3.getText());    
+        	String t = calc.getDisplayValue4();
+        	display4.setText(t);
         }
-        else if(command.equals("+")) {
-            calc.plus();
+        else if(command.equals("Substract Days")) {
+        	calc.substractDays(display1.getText(), display3.getText());    
+        	String t = calc.getDisplayValue4();
+        	display4.setText(t);        
+        	
         }
-        else if(command.equals("-")) {
-            calc.minus();
+        else if(command.equals("Get difference")) {
+        	calc.getDifference(display1.getText(), display2.getText());  
+        	String t = calc.getDisplayValue4();	
+        	display4.setText(t);
+        	
         }
-        else if(command.equals("=")) {
-            calc.equals();
-        }
-        else if(command.equals("C")) {
-            calc.clear();
-        }
-        else if(command.equals("?")) {
-            showInfo();
+        else if(command.equals("Get Weekday")) {
+        	System.out.println("pressed");
+        	calc.getWeekday(display1.getText());
+        	String t = calc.getDisplayValue4();	
+        	display4.setText(t);
+        
         }
         // else unknown command.
 
@@ -145,20 +151,12 @@ public class UserInterface
      */
     private void redisplay()
     {
-        display.setText("" + calc.getDisplayValue());
+    	//display4.setText(calc.getDisplayValue4()); 
     }
 
     /**
      * Toggle the info display in the calculator's status area between the
      * author and version information.
      */
-    private void showInfo()
-    {
-        if(showingAuthor)
-            status.setText(calc.getVersion());
-        else
-            status.setText(calc.getAuthor());
-
-        showingAuthor = !showingAuthor;
-    }
+ 
 }
